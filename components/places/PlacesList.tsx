@@ -31,16 +31,30 @@ export default function PlacesList({
   setSelectedPlaceId,
   userLocation,
 }: PlacesListProps) {
+  const listRef = useRef<HTMLDivElement | null>(null)
   const cardRefs = useRef<Record<string, HTMLDivElement | null>>({})
 
   useEffect(() => {
-    if (!selectedPlaceId) return
+    if (!selectedPlaceId || !listRef.current) return
 
+    const container = listRef.current
     const el = cardRefs.current[selectedPlaceId]
-    if (el) {
-      el.scrollIntoView({
+
+    if (!el) return
+
+    const containerTop = container.scrollTop
+    const containerHeight = container.clientHeight
+    const elTop = el.offsetTop
+    const elHeight = el.offsetHeight
+    const elBottom = elTop + elHeight
+
+    const visibleTop = containerTop
+    const visibleBottom = containerTop + containerHeight
+
+    if (elTop < visibleTop || elBottom > visibleBottom) {
+      container.scrollTo({
+        top: elTop - 16,
         behavior: 'smooth',
-        block: 'nearest',
       })
     }
   }, [selectedPlaceId])
@@ -96,7 +110,7 @@ export default function PlacesList({
   }
 
   return (
-    <div className="space-y-5">
+    <div ref={listRef} className="h-full space-y-5 overflow-y-auto">
       {sortedPlaces.map((place) => {
         const isSelected = place.id === selectedPlaceId
 
