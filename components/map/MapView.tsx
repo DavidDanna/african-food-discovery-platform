@@ -42,19 +42,26 @@ export default function MapView({
       container: mapContainerRef.current,
       style: 'mapbox://styles/mapbox/streets-v12',
       center: [-77.0369, 38.9072],
-      zoom: 9,
+      zoom: 10,
     })
 
     map.addControl(new mapboxgl.NavigationControl(), 'top-right')
 
     map.on('load', () => {
-      setMapReady(true)
       map.resize()
+      setMapReady(true)
     })
+
+    const handleResize = () => {
+      map.resize()
+    }
+
+    window.addEventListener('resize', handleResize)
 
     mapRef.current = map
 
     return () => {
+      window.removeEventListener('resize', handleResize)
       Object.values(markersRef.current).forEach((marker) => marker.remove())
       markersRef.current = {}
       markerElementsRef.current = {}
@@ -82,11 +89,12 @@ export default function MapView({
 
       const el = document.createElement('div')
       el.className =
-        'h-4 w-4 cursor-pointer rounded-full border-2 border-white shadow-md transition-all duration-200'
+        'h-4 w-4 shrink-0 cursor-pointer rounded-full border-2 border-white shadow-md transition-all duration-200'
       el.style.backgroundColor =
         place.type === 'restaurant' ? '#ef4444' : '#22c55e'
 
-      el.addEventListener('click', () => {
+      el.addEventListener('click', (event) => {
+        event.stopPropagation()
         onSelectPlace?.(place.id)
       })
 
@@ -151,7 +159,7 @@ export default function MapView({
   useEffect(() => {
     Object.entries(markerElementsRef.current).forEach(([id, el]) => {
       if (id === selectedPlaceId) {
-        el.style.transform = 'scale(1.5)'
+        el.style.transform = 'scale(1.4)'
         el.style.boxShadow = '0 0 0 3px rgba(17, 24, 39, 0.18)'
         el.style.zIndex = '10'
       } else {
@@ -170,38 +178,10 @@ export default function MapView({
 
     mapRef.current.flyTo({
       center: [place.longitude, place.latitude],
-      zoom: 14,
+      zoom: 13,
       essential: true,
     })
   }, [selectedPlaceId, places])
-
-  useEffect(() => {
-  if (!mapRef.current || places.length === 0) return
-
-  if (places.length === 1) {
-    const p = places[0]
-    mapRef.current.flyTo({
-      center: [p.longitude, p.latitude],
-      zoom: 14,
-      essential: true,
-    })
-    return
-  }
-
-  const bounds = new mapboxgl.LngLatBounds()
-
-  places.forEach((p) => {
-    if (typeof p.latitude === 'number' && typeof p.longitude === 'number') {
-      bounds.extend([p.longitude, p.latitude])
-    }
-  })
-
-  mapRef.current.fitBounds(bounds, {
-    padding: 60,
-    maxZoom: 14,
-    duration: 800,
-  })
-}, [places])
 
   if (!mapboxToken) {
     return (
@@ -219,8 +199,8 @@ export default function MapView({
   }
 
   return (
-    <div className="h-full w-full min-h-[320px]">
-      <div ref={mapContainerRef} className="h-full w-full" />
+    <div className="relative h-full w-full overflow-hidden">
+      <div ref={mapContainerRef} className="absolute inset-0" />
     </div>
   )
 }
