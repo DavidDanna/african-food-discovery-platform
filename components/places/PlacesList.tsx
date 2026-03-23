@@ -113,6 +113,13 @@ export default function PlacesList({
       {sortedPlaces.map((place) => {
         const isSelected = place.id === selectedPlaceId
 
+        const directionsHref =
+          typeof place.latitude === 'number' && typeof place.longitude === 'number'
+            ? `https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`
+            : place.address
+            ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.address)}`
+            : null
+
         return (
           <div
             key={place.id}
@@ -191,13 +198,24 @@ export default function PlacesList({
               </div>
             </button>
 
-            <div className="border-t border-neutral-100 px-4 py-3">
+            <div className="flex items-center justify-between border-t border-neutral-100 px-4 py-3">
               <Link
                 href={`/places/${place.id}`}
                 className="text-sm font-medium text-blue-600 transition hover:text-blue-700"
               >
                 View Details →
               </Link>
+
+              {directionsHref && (
+                <a
+                  href={directionsHref}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-sm font-medium text-neutral-700 transition hover:text-neutral-900"
+                >
+                  Directions
+                </a>
+              )}
             </div>
           </div>
         )
