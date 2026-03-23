@@ -47,13 +47,12 @@ export default function PlacesList({
     const elTop = el.offsetTop
     const elHeight = el.offsetHeight
     const elBottom = elTop + elHeight
-
     const visibleTop = containerTop
     const visibleBottom = containerTop + containerHeight
 
     if (elTop < visibleTop || elBottom > visibleBottom) {
       container.scrollTo({
-        top: elTop - 16,
+        top: Math.max(elTop - 16, 0),
         behavior: 'smooth',
       })
     }
@@ -110,7 +109,7 @@ export default function PlacesList({
   }
 
   return (
-    <div ref={listRef} className="h-full space-y-5 overflow-y-auto">
+    <div ref={listRef} className="space-y-5">
       {sortedPlaces.map((place) => {
         const isSelected = place.id === selectedPlaceId
 

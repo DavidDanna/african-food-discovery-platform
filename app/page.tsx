@@ -23,7 +23,6 @@ type Place = {
 export default function HomePage() {
   const [places, setPlaces] = useState<Place[]>([])
   const [loading, setLoading] = useState(true)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null)
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
@@ -31,20 +30,9 @@ export default function HomePage() {
 
   useEffect(() => {
     const fetchPlaces = async () => {
-      setLoading(true)
-      setErrorMessage(null)
-
       const { data, error } = await supabase.from('places').select('*')
 
-      if (error) {
-        console.error('Supabase fetch error:', error)
-        setErrorMessage(error.message || 'Failed to load places.')
-        setPlaces([])
-        setLoading(false)
-        return
-      }
-
-      if (data) {
+      if (!error && data) {
         setPlaces(data)
         if (data.length > 0) {
           setSelectedPlaceId(data[0].id)
@@ -195,35 +183,26 @@ export default function HomePage() {
         </div>
       </header>
 
-<div className="grid h-[calc(100vh-160px)] grid-cols-1 md:h-[calc(100vh-126px)] md:grid-cols-12">
-  
-<section className="h-[45vh] min-h-0 md:col-span-7 md:h-full">
-            <MapView
+      <div className="grid h-[calc(100vh-160px)] grid-cols-1 md:h-[calc(100vh-126px)] md:grid-cols-12">
+        <section className="h-[45vh] min-h-0 md:col-span-7 md:h-full">
+          <MapView
             places={filteredPlaces}
             selectedPlaceId={selectedPlaceId}
             onSelectPlace={setSelectedPlaceId}
           />
         </section>
 
-<aside className="flex h-[55vh] flex-col border-t border-neutral-200 bg-white md:col-span-5 md:h-full md:border-l md:border-t-0">
-            <div className="sticky top-0 z-10 border-b border-neutral-200 bg-white px-4 py-4 md:px-5">
+        <aside className="flex min-h-0 h-[55vh] flex-col border-t border-neutral-200 bg-white md:col-span-5 md:h-full md:border-l md:border-t-0">
+          <div className="border-b border-neutral-200 bg-white px-4 py-4 md:px-5">
             <h2 className="text-base font-semibold text-neutral-900">Places</h2>
             <p className="text-sm text-neutral-500">
-              {loading
-                ? 'Loading places...'
-                : errorMessage
-                ? 'Could not load places'
-                : `${filteredPlaces.length} locations`}
+              {loading ? 'Loading places...' : `${filteredPlaces.length} locations`}
             </p>
           </div>
 
-          <div className="flex-1 overflow-y-auto px-4 py-4 md:px-5 md:py-5">
+          <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4 md:px-5 md:py-5">
             {loading ? (
               <div className="p-4 text-sm text-neutral-500">Loading...</div>
-            ) : errorMessage ? (
-              <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-                {errorMessage}
-              </div>
             ) : (
               <PlacesList
                 places={filteredPlaces}
