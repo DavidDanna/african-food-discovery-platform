@@ -23,17 +23,28 @@ type Place = {
 export default function HomePage() {
   const [places, setPlaces] = useState<Place[]>([])
   const [loading, setLoading] = useState(true)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null)
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
-
   const [searchTerm, setSearchTerm] = useState('')
   const [typeFilter, setTypeFilter] = useState<'all' | 'restaurant' | 'grocery'>('all')
 
   useEffect(() => {
     const fetchPlaces = async () => {
+      setLoading(true)
+      setErrorMessage(null)
+
       const { data, error } = await supabase.from('places').select('*')
 
-      if (!error && data) {
+      if (error) {
+        console.error('Supabase fetch error:', error)
+        setErrorMessage(error.message || 'Failed to load places.')
+        setPlaces([])
+        setLoading(false)
+        return
+      }
+
+      if (data) {
         setPlaces(data)
         if (data.length > 0) {
           setSelectedPlaceId(data[0].id)
@@ -197,13 +208,21 @@ export default function HomePage() {
           <div className="sticky top-0 z-10 border-b border-neutral-200 bg-white px-4 py-4 md:px-5">
             <h2 className="text-base font-semibold text-neutral-900">Places</h2>
             <p className="text-sm text-neutral-500">
-              {loading ? 'Loading places...' : `${filteredPlaces.length} locations`}
+              {loading
+                ? 'Loading places...'
+                : errorMessage
+                ? 'Could not load places'
+                : `${filteredPlaces.length} locations`}
             </p>
           </div>
 
           <div className="flex-1 overflow-y-auto px-4 py-4 md:px-5 md:py-5">
             {loading ? (
               <div className="p-4 text-sm text-neutral-500">Loading...</div>
+            ) : errorMessage ? (
+              <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                {errorMessage}
+              </div>
             ) : (
               <PlacesList
                 places={filteredPlaces}
