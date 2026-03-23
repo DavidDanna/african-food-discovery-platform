@@ -25,6 +25,7 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true)
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null)
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
+
   const [searchTerm, setSearchTerm] = useState('')
   const [typeFilter, setTypeFilter] = useState<'all' | 'restaurant' | 'grocery'>('all')
 
@@ -115,7 +116,7 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-3 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-center">
+          <div className="flex flex-col gap-3">
             <div className="min-w-0">
               <input
                 type="text"
@@ -126,8 +127,8 @@ export default function HomePage() {
               />
             </div>
 
-<div className="flex flex-wrap gap-2 overflow-x-auto">
-                <button
+            <div className="flex flex-wrap gap-2 overflow-x-auto pb-1">
+              <button
                 type="button"
                 onClick={() => setTypeFilter('all')}
                 className={`rounded-xl px-4 py-3 text-sm font-medium transition ${
@@ -183,7 +184,7 @@ export default function HomePage() {
         </div>
       </header>
 
-      <div className="grid h-[calc(100vh-210px)] grid-cols-1 md:h-[calc(100vh-150px)] md:grid-cols-5 xl:h-[calc(100vh-126px)]">
+      <div className="grid h-[calc(100vh-160px)] grid-cols-1 md:h-[calc(100vh-126px)] md:grid-cols-5">
         <section className="h-[45vh] min-h-0 md:col-span-3 md:h-full">
           <MapView
             places={filteredPlaces}
