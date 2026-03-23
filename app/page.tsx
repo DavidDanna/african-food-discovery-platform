@@ -103,8 +103,8 @@ export default function HomePage() {
   }
 
   return (
-    <main className="h-screen overflow-hidden bg-neutral-50">
-      <header className="border-b border-neutral-200 bg-white">
+<main className="min-h-screen bg-neutral-50">
+        <header className="border-b border-neutral-200 bg-white">
         <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
           <div className="mb-4">
             <h1 className="text-2xl font-bold text-neutral-900">
@@ -192,7 +192,7 @@ export default function HomePage() {
           />
         </section>
 
-        <aside className="flex min-h-0 h-[55vh] flex-col border-t border-neutral-200 bg-white md:col-span-5 md:h-full md:border-l md:border-t-0">
+        <aside className="flex h-[55vh] min-h-0 flex-col border-t border-neutral-200 bg-white md:col-span-5 md:h-full md:border-l md:border-t-0">
           <div className="border-b border-neutral-200 bg-white px-4 py-4 md:px-5">
             <h2 className="text-base font-semibold text-neutral-900">Places</h2>
             <p className="text-sm text-neutral-500">

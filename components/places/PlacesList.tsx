@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useMemo, useRef } from 'react'
+import { useMemo } from 'react'
 
 type Place = {
   id: string
@@ -31,33 +31,6 @@ export default function PlacesList({
   setSelectedPlaceId,
   userLocation,
 }: PlacesListProps) {
-  const listRef = useRef<HTMLDivElement | null>(null)
-  const cardRefs = useRef<Record<string, HTMLDivElement | null>>({})
-
-  useEffect(() => {
-    if (!selectedPlaceId || !listRef.current) return
-
-    const container = listRef.current
-    const el = cardRefs.current[selectedPlaceId]
-
-    if (!el) return
-
-    const containerTop = container.scrollTop
-    const containerHeight = container.clientHeight
-    const elTop = el.offsetTop
-    const elHeight = el.offsetHeight
-    const elBottom = elTop + elHeight
-    const visibleTop = containerTop
-    const visibleBottom = containerTop + containerHeight
-
-    if (elTop < visibleTop || elBottom > visibleBottom) {
-      container.scrollTo({
-        top: Math.max(elTop - 16, 0),
-        behavior: 'smooth',
-      })
-    }
-  }, [selectedPlaceId])
-
   function getDistanceMiles(lat1: number, lon1: number, lat2: number, lon2: number) {
     const R = 6371
     const dLat = ((lat2 - lat1) * Math.PI) / 180
@@ -109,7 +82,7 @@ export default function PlacesList({
   }
 
   return (
-    <div ref={listRef} className="space-y-5">
+    <div className="space-y-5">
       {sortedPlaces.map((place) => {
         const isSelected = place.id === selectedPlaceId
 
@@ -117,19 +90,16 @@ export default function PlacesList({
           typeof place.latitude === 'number' && typeof place.longitude === 'number'
             ? `https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`
             : place.address
-            ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.address)}`
-            : null
+              ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.address)}`
+              : null
 
         return (
           <div
             key={place.id}
-            ref={(el) => {
-              cardRefs.current[place.id] = el
-            }}
             className={`group overflow-hidden rounded-2xl border bg-white shadow-sm transition-all duration-200 ${
               isSelected
-                ? 'scale-[1.01] border-neutral-900 ring-1 ring-neutral-900 shadow-md'
-                : 'border-neutral-200 hover:-translate-y-0.5 hover:border-neutral-300 hover:shadow-lg active:scale-[0.99]'
+                ? 'border-neutral-900 ring-1 ring-neutral-900 shadow-md'
+                : 'border-neutral-200 hover:border-neutral-300 hover:shadow-lg'
             }`}
           >
             <button
