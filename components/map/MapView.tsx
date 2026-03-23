@@ -175,6 +175,34 @@ export default function MapView({
     })
   }, [selectedPlaceId, places])
 
+  useEffect(() => {
+  if (!mapRef.current || places.length === 0) return
+
+  if (places.length === 1) {
+    const p = places[0]
+    mapRef.current.flyTo({
+      center: [p.longitude, p.latitude],
+      zoom: 14,
+      essential: true,
+    })
+    return
+  }
+
+  const bounds = new mapboxgl.LngLatBounds()
+
+  places.forEach((p) => {
+    if (typeof p.latitude === 'number' && typeof p.longitude === 'number') {
+      bounds.extend([p.longitude, p.latitude])
+    }
+  })
+
+  mapRef.current.fitBounds(bounds, {
+    padding: 60,
+    maxZoom: 14,
+    duration: 800,
+  })
+}, [places])
+
   if (!mapboxToken) {
     return (
       <div className="flex h-full w-full items-center justify-center bg-neutral-100 p-6 text-center">
