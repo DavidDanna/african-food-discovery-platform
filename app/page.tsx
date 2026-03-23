@@ -195,17 +195,18 @@ export default function HomePage() {
         </div>
       </header>
 
-      <div className="grid h-[calc(100vh-160px)] grid-cols-1 md:h-[calc(100vh-126px)] md:grid-cols-5">
-        <section className="h-[45vh] min-h-0 md:col-span-3 md:h-full">
-          <MapView
+<div className="grid h-[calc(100vh-160px)] grid-cols-1 md:h-[calc(100vh-126px)] md:grid-cols-12">
+  
+<section className="h-[45vh] min-h-0 md:col-span-7 md:h-full">
+            <MapView
             places={filteredPlaces}
             selectedPlaceId={selectedPlaceId}
             onSelectPlace={setSelectedPlaceId}
           />
         </section>
 
-        <aside className="flex h-[55vh] flex-col border-t border-neutral-200 bg-white md:col-span-2 md:h-full md:border-l md:border-t-0">
-          <div className="sticky top-0 z-10 border-b border-neutral-200 bg-white px-4 py-4 md:px-5">
+<aside className="flex h-[55vh] flex-col border-t border-neutral-200 bg-white md:col-span-5 md:h-full md:border-l md:border-t-0">
+            <div className="sticky top-0 z-10 border-b border-neutral-200 bg-white px-4 py-4 md:px-5">
             <h2 className="text-base font-semibold text-neutral-900">Places</h2>
             <p className="text-sm text-neutral-500">
               {loading
