@@ -48,16 +48,18 @@ export default function HomePage() {
 
   const filteredPlaces = useMemo(() => {
     return places.filter((place) => {
+      const search = searchTerm.toLowerCase().trim()
+
       const matchesSearch =
-        searchTerm.trim() === '' ||
-        place.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        place.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        place.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        place.state.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (place.cuisine || '').toLowerCase().includes(searchTerm.toLowerCase())
+        search === '' ||
+        (place.name || '').toLowerCase().includes(search) ||
+        (place.address || '').toLowerCase().includes(search) ||
+        (place.city || '').toLowerCase().includes(search) ||
+        (place.state || '').toLowerCase().includes(search) ||
+        (place.cuisine || '').toLowerCase().includes(search)
 
       const matchesType =
-        typeFilter === 'all' ? true : place.type === typeFilter
+        typeFilter === 'all' || place.type === typeFilter
 
       return matchesSearch && matchesType
     })
@@ -103,8 +105,11 @@ export default function HomePage() {
 
   return (
     <main className="h-screen overflow-hidden bg-neutral-50">
+      
+      {/* HEADER */}
       <header className="border-b border-neutral-200 bg-white">
         <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
+          
           <div className="mb-4">
             <h1 className="text-2xl font-bold text-neutral-900">
               African Food Discovery
@@ -115,6 +120,8 @@ export default function HomePage() {
           </div>
 
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+            
+            {/* SEARCH */}
             <div className="flex-1">
               <input
                 type="text"
@@ -125,11 +132,12 @@ export default function HomePage() {
               />
             </div>
 
-            <div className="flex flex-wrap gap-2">
+            {/* BUTTONS */}
+            <div className="flex flex-wrap items-center gap-2">
+              
               <button
-                type="button"
                 onClick={() => setTypeFilter('all')}
-                className={`rounded-xl px-4 py-3 text-sm font-medium transition ${
+                className={`shrink-0 rounded-xl px-4 py-3 text-sm font-medium transition ${
                   typeFilter === 'all'
                     ? 'bg-neutral-900 text-white'
                     : 'border border-neutral-300 bg-white text-neutral-700 hover:bg-neutral-100'
@@ -139,9 +147,8 @@ export default function HomePage() {
               </button>
 
               <button
-                type="button"
                 onClick={() => setTypeFilter('restaurant')}
-                className={`rounded-xl px-4 py-3 text-sm font-medium transition ${
+                className={`shrink-0 rounded-xl px-4 py-3 text-sm font-medium transition ${
                   typeFilter === 'restaurant'
                     ? 'bg-red-600 text-white'
                     : 'border border-neutral-300 bg-white text-neutral-700 hover:bg-neutral-100'
@@ -151,9 +158,8 @@ export default function HomePage() {
               </button>
 
               <button
-                type="button"
                 onClick={() => setTypeFilter('grocery')}
-                className={`rounded-xl px-4 py-3 text-sm font-medium transition ${
+                className={`shrink-0 rounded-xl px-4 py-3 text-sm font-medium transition ${
                   typeFilter === 'grocery'
                     ? 'bg-green-600 text-white'
                     : 'border border-neutral-300 bg-white text-neutral-700 hover:bg-neutral-100'
@@ -163,37 +169,39 @@ export default function HomePage() {
               </button>
 
               <button
-                type="button"
                 onClick={handleLocateMe}
-                className="rounded-xl border border-neutral-300 bg-white px-4 py-3 text-sm font-medium text-neutral-700 transition hover:bg-neutral-100"
+                className="shrink-0 rounded-xl border border-neutral-300 bg-white px-4 py-3 text-sm font-medium text-neutral-700 hover:bg-neutral-100"
               >
                 Locate Me
               </button>
 
               <button
-                type="button"
                 onClick={handleReset}
-                className="rounded-xl border border-neutral-300 bg-white px-4 py-3 text-sm font-medium text-neutral-700 transition hover:bg-neutral-100"
+                className="shrink-0 rounded-xl border border-neutral-300 bg-white px-4 py-3 text-sm font-medium text-neutral-700 hover:bg-neutral-100"
               >
                 Reset
               </button>
+
             </div>
           </div>
         </div>
       </header>
 
-      <div className="grid h-[calc(100vh-126px)] grid-cols-1 md:grid-cols-5">
+      {/* MAIN */}
+      <div className="grid h-[calc(100vh-160px)] grid-cols-1 md:h-[calc(100vh-126px)] md:grid-cols-5">
+
+        {/* MAP */}
         <section className="h-[45vh] min-h-0 md:col-span-3 md:h-full">
-          <div className="h-full overflow-hidden">
-            <MapView
-              places={filteredPlaces}
-              selectedPlaceId={selectedPlaceId}
-              onSelectPlace={setSelectedPlaceId}
-            />
-          </div>
+          <MapView
+            places={filteredPlaces}
+            selectedPlaceId={selectedPlaceId}
+            onSelectPlace={setSelectedPlaceId}
+          />
         </section>
 
+        {/* LIST */}
         <aside className="flex h-[55vh] flex-col border-t border-neutral-200 bg-white md:col-span-2 md:h-full md:border-l md:border-t-0">
+          
           <div className="sticky top-0 z-10 border-b border-neutral-200 bg-white px-4 py-4 md:px-5">
             <h2 className="text-base font-semibold text-neutral-900">Places</h2>
             <p className="text-sm text-neutral-500">
@@ -213,6 +221,7 @@ export default function HomePage() {
               />
             )}
           </div>
+
         </aside>
       </div>
     </main>
