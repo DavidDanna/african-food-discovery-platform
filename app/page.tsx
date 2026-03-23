@@ -126,8 +126,8 @@ export default function HomePage() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5 xl:flex xl:flex-wrap xl:justify-end">
-              <button
+<div className="flex flex-wrap gap-2 overflow-x-auto">
+                <button
                 type="button"
                 onClick={() => setTypeFilter('all')}
                 className={`rounded-xl px-4 py-3 text-sm font-medium transition ${
