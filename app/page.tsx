@@ -25,7 +25,6 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true)
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null)
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
-
   const [searchTerm, setSearchTerm] = useState('')
   const [typeFilter, setTypeFilter] = useState<'all' | 'restaurant' | 'grocery'>('all')
 
@@ -105,11 +104,8 @@ export default function HomePage() {
 
   return (
     <main className="h-screen overflow-hidden bg-neutral-50">
-      
-      {/* HEADER */}
       <header className="border-b border-neutral-200 bg-white">
         <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
-          
           <div className="mb-4">
             <h1 className="text-2xl font-bold text-neutral-900">
               African Food Discovery
@@ -119,10 +115,8 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-            
-            {/* SEARCH */}
-            <div className="flex-1">
+          <div className="grid grid-cols-1 gap-3 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-center">
+            <div className="min-w-0">
               <input
                 type="text"
                 placeholder="Search by name, cuisine, city, or address"
@@ -132,12 +126,11 @@ export default function HomePage() {
               />
             </div>
 
-            {/* BUTTONS */}
-            <div className="flex flex-wrap items-center gap-2">
-              
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5 xl:flex xl:flex-wrap xl:justify-end">
               <button
+                type="button"
                 onClick={() => setTypeFilter('all')}
-                className={`shrink-0 rounded-xl px-4 py-3 text-sm font-medium transition ${
+                className={`rounded-xl px-4 py-3 text-sm font-medium transition ${
                   typeFilter === 'all'
                     ? 'bg-neutral-900 text-white'
                     : 'border border-neutral-300 bg-white text-neutral-700 hover:bg-neutral-100'
@@ -147,8 +140,9 @@ export default function HomePage() {
               </button>
 
               <button
+                type="button"
                 onClick={() => setTypeFilter('restaurant')}
-                className={`shrink-0 rounded-xl px-4 py-3 text-sm font-medium transition ${
+                className={`rounded-xl px-4 py-3 text-sm font-medium transition ${
                   typeFilter === 'restaurant'
                     ? 'bg-red-600 text-white'
                     : 'border border-neutral-300 bg-white text-neutral-700 hover:bg-neutral-100'
@@ -158,8 +152,9 @@ export default function HomePage() {
               </button>
 
               <button
+                type="button"
                 onClick={() => setTypeFilter('grocery')}
-                className={`shrink-0 rounded-xl px-4 py-3 text-sm font-medium transition ${
+                className={`rounded-xl px-4 py-3 text-sm font-medium transition ${
                   typeFilter === 'grocery'
                     ? 'bg-green-600 text-white'
                     : 'border border-neutral-300 bg-white text-neutral-700 hover:bg-neutral-100'
@@ -169,28 +164,26 @@ export default function HomePage() {
               </button>
 
               <button
+                type="button"
                 onClick={handleLocateMe}
-                className="shrink-0 rounded-xl border border-neutral-300 bg-white px-4 py-3 text-sm font-medium text-neutral-700 hover:bg-neutral-100"
+                className="rounded-xl border border-neutral-300 bg-white px-4 py-3 text-sm font-medium text-neutral-700 transition hover:bg-neutral-100"
               >
                 Locate Me
               </button>
 
               <button
+                type="button"
                 onClick={handleReset}
-                className="shrink-0 rounded-xl border border-neutral-300 bg-white px-4 py-3 text-sm font-medium text-neutral-700 hover:bg-neutral-100"
+                className="rounded-xl border border-neutral-300 bg-white px-4 py-3 text-sm font-medium text-neutral-700 transition hover:bg-neutral-100"
               >
                 Reset
               </button>
-
             </div>
           </div>
         </div>
       </header>
 
-      {/* MAIN */}
-      <div className="grid h-[calc(100vh-160px)] grid-cols-1 md:h-[calc(100vh-126px)] md:grid-cols-5">
-
-        {/* MAP */}
+      <div className="grid h-[calc(100vh-210px)] grid-cols-1 md:h-[calc(100vh-150px)] md:grid-cols-5 xl:h-[calc(100vh-126px)]">
         <section className="h-[45vh] min-h-0 md:col-span-3 md:h-full">
           <MapView
             places={filteredPlaces}
@@ -199,9 +192,7 @@ export default function HomePage() {
           />
         </section>
 
-        {/* LIST */}
         <aside className="flex h-[55vh] flex-col border-t border-neutral-200 bg-white md:col-span-2 md:h-full md:border-l md:border-t-0">
-          
           <div className="sticky top-0 z-10 border-b border-neutral-200 bg-white px-4 py-4 md:px-5">
             <h2 className="text-base font-semibold text-neutral-900">Places</h2>
             <p className="text-sm text-neutral-500">
@@ -221,7 +212,6 @@ export default function HomePage() {
               />
             )}
           </div>
-
         </aside>
       </div>
     </main>
