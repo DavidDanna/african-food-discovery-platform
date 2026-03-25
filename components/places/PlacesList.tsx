@@ -16,6 +16,10 @@ type Place = {
   phone: string | null
   created_at: string | null
   image_url: string | null
+  tags: string | null
+  products: string | null
+  hours: string | null
+  delivery_available: boolean | null
 }
 
 type PlacesListProps = {
@@ -75,7 +79,7 @@ export default function PlacesList({
       <div className="rounded-2xl border border-neutral-200 bg-white p-6 text-center shadow-sm">
         <h3 className="text-lg font-semibold text-neutral-900">No places found</h3>
         <p className="mt-2 text-sm text-neutral-600">
-          Try adjusting your search or filters.
+          Try a food or product like jollof, suya, garri, or shea butter.
         </p>
       </div>
     )
@@ -143,15 +147,32 @@ export default function PlacesList({
                           userLocation.lng,
                           place.latitude,
                           place.longitude
-                        ).toFixed(1)}{' '}
-                        miles away
+                        ).toFixed(1)} miles away
+                      </p>
+                    )}
+
+                    {place.hours && (
+                      <p className="mt-1 text-sm text-neutral-500">{place.hours}</p>
+                    )}
+
+                    {place.delivery_available && (
+                      <p className="mt-1 text-sm font-medium text-green-600">
+                        Delivery available
                       </p>
                     )}
 
                     <p className="mt-2 text-sm text-neutral-500">{place.address}</p>
 
-                    {place.phone && (
-                      <p className="mt-1 text-sm text-neutral-500">{place.phone}</p>
+                    {place.products && (
+                      <p className="mt-2 text-sm text-neutral-500">
+                        <span className="font-medium text-neutral-700">Products:</span> {place.products}
+                      </p>
+                    )}
+
+                    {place.tags && (
+                      <p className="mt-1 text-sm text-neutral-500">
+                        <span className="font-medium text-neutral-700">Tags:</span> {place.tags}
+                      </p>
                     )}
                   </div>
 
